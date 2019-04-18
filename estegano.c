@@ -75,7 +75,7 @@ void recover_secret (BMP *bmp, int width, int height)
 {
 	int i, j, x, y, size;
 	UCHAR r, g, b, bit;
-	char *c;
+	char c;
 
 	BMP_GetPixelRGB( bmp, 0, 0, &r, &g, &b );
 	size = r;
@@ -85,14 +85,12 @@ void recover_secret (BMP *bmp, int width, int height)
 	x = 1;
 	y = 0;
 
-	c = malloc( sizeof(char) );
-
 	for (i=0; i<size; i++) {
-		*c = 0x00;
+		c = 0x00;
 		for (j=0; j<8; j++) {
 
 			BMP_GetPixelRGB( bmp, x, y, &r, &g, &b );
-			*c = *c | ((r & 0x01) << j);
+			c = c | ((r & 0x01) << j);
 
 			x++;
 			if(x >= width){
@@ -101,10 +99,10 @@ void recover_secret (BMP *bmp, int width, int height)
 			}
 
 		}
-		line[i] = *c;
+		line[i] = c;
 	}
 	line[size] = 0;
-	printf(line);
+	printf("%s\n",line);
 }
 
 /* Creates a negative image of the input bitmap file */
@@ -141,8 +139,8 @@ int main( int argc, char **argv )
 
 	load_txt_file(input_txt, &txt);
 
-	printf("width: %u\n", width);
-	printf("height: %u\n", height);
+	printf("width: %lu\n", width);
+	printf("height: %lu\n", height);
 	printf("capacity_bytes: %u\n", capacity_bytes);
 	printf("secret bytes: %u\n", txt.size);
 
